@@ -1,0 +1,11 @@
+# Dependencias de Node (solo para las pruebas)
+node_modules/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/

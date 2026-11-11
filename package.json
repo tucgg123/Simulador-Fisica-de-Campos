@@ -1,0 +1,12 @@
+{
+  "name": "simulador-fisica-de-campo",
+  "version": "2.0.0",
+  "description": "Simulador de un sistema fotovoltaico distribuido para el Barrio Galán, Barranquilla (informe de Física de Campos).",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

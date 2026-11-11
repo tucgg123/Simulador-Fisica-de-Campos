@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Física de campos | Sistema fotovoltaico Barrio Galán</title>
+  <meta name="description" content="Corriente, campo magnético, campo eléctrico y pérdidas por efecto Joule de los sistemas solares del Barrio Galán.">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <img src="assets/img/favicon.svg" alt="" width="40" height="40">
+        <span><strong>Sistema fotovoltaico</strong><span>Barrio Galán, Barranquilla</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Principal">
+        <a href="index.html">Simulador</a>
+        <a href="locales.html">Locales</a>
+        <a href="fisica.html" aria-current="page">Física de campos</a>
+        <a href="clima.html">Clima</a>
+        <a href="modelos.html">Modelos 3D</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="page-head">
+      <div class="wrap">
+        <h1>Física de campos aplicada</h1>
+        <p>Ley de Watt, ley de Ampère, campo eléctrico y efecto Joule, con los datos del informe: V = 220 V, r = 5 cm y R = 0,2 Ω.</p>
+      </div>
+    </section>
+
+    <div class="content">
+      <div class="wrap">
+        <section class="block phys-grid" aria-label="Cálculos del informe">
+          <article class="phys">
+            <h2>Corriente eléctrica</h2>
+            <span class="formula">I = P / V</span>
+            <dl>
+              <div><dt id="p-1"></dt><dd id="i-1"></dd></div>
+              <div><dt id="p-2"></dt><dd id="i-2"></dd></div>
+            </dl>
+          </article>
+          <article class="phys">
+            <h2>Campo magnético (ley de Ampère)</h2>
+            <span class="formula">B = μ₀ · I / (2π · r)</span>
+            <dl>
+              <div><dt>Sistema 1, a 5 cm</dt><dd id="b-1"></dd></div>
+              <div><dt>Sistema 2, a 5 cm</dt><dd id="b-2"></dd></div>
+              <div><dt>μ₀</dt><dd>4π × 10⁻⁷ T·m/A</dd></div>
+            </dl>
+          </article>
+          <article class="phys">
+            <h2>Campo eléctrico</h2>
+            <span class="formula">E = V / d</span>
+            <dl>
+              <div><dt>Ambos sistemas, a 5 cm</dt><dd id="e-value"></dd></div>
+              <div><dt>Límite OMS / ICNIRP</dt><dd id="e-limit"></dd></div>
+            </dl>
+          </article>
+          <article class="phys">
+            <h2>Pérdidas por efecto Joule</h2>
+            <span class="formula">P = I² · R</span>
+            <dl>
+              <div><dt>Sistema 1 (R = 0,2 Ω)</dt><dd id="j-1"></dd></div>
+              <div><dt>Sistema 2 (R = 0,2 Ω)</dt><dd id="j-2"></dd></div>
+              <div><dt>El Sistema 2 genera</dt><dd id="j-diff"></dd></div>
+            </dl>
+          </article>
+        </section>
+
+        <section class="block">
+          <div class="table-wrap">
+            <table>
+              <caption>Verificación de límites OMS / ICNIRP</caption>
+              <thead><tr><th scope="col">Magnitud</th><th class="num" scope="col">Sistema 1</th><th class="num" scope="col">Sistema 2</th><th class="num" scope="col">Límite</th><th scope="col">Resultado</th></tr></thead>
+              <tbody id="limits-body"></tbody>
+            </table>
+          </div>
+          <div class="note-box"><p id="limits-note"></p></div>
+        </section>
+
+        <section class="block card" aria-labelledby="slider-title">
+          <h2 id="slider-title">Campo magnético según la distancia</h2>
+          <p class="block-intro">Mueve el control para ver cómo baja el campo magnético al alejarse del cable.</p>
+          <div class="slider-row">
+            <label for="distance">Distancia al cable</label>
+            <input id="distance" type="range" min="1" max="200" value="5" step="1">
+            <output id="distance-out" for="distance">5 cm</output>
+          </div>
+          <dl class="field-results" aria-live="polite">
+            <div id="b1-out-box"><dt id="b1-name"></dt><dd id="b1-out"></dd></div>
+            <div id="b2-out-box"><dt id="b2-name"></dt><dd id="b2-out"></dd></div>
+          </dl>
+          <div class="chart-box"><canvas id="chart-field" role="img" aria-label="Gráfica del campo magnético de cada sistema según la distancia, con el límite de 200 microteslas"></canvas></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Informe de Física de Campos · Barrio Galán, Barranquilla · Araujo, Ovalle, Romero y Pinto · 2026</p>
+      <p>Gráficas: <a href="https://www.chartjs.org">Chart.js</a> · Clima: <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0)</p>
+    </div>
+  </footer>
+
+  <script src="assets/vendor/chartjs/chart.umd.js"></script>
+  <script src="assets/js/data/project.js"></script>
+  <script src="assets/js/core/solar.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/pages/physics.js"></script>
+</body>
+</html>

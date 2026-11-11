@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Locales | Sistema fotovoltaico Barrio Galán</title>
+  <meta name="description" content="Consumo, techo, energía generada, presupuesto y retorno de los cinco locales del Barrio Galán.">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <img src="assets/img/favicon.svg" alt="" width="40" height="40">
+        <span><strong>Sistema fotovoltaico</strong><span>Barrio Galán, Barranquilla</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Principal">
+        <a href="index.html">Simulador</a>
+        <a href="locales.html" aria-current="page">Locales</a>
+        <a href="fisica.html">Física de campos</a>
+        <a href="clima.html">Clima</a>
+        <a href="modelos.html">Modelos 3D</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="page-head">
+      <div class="wrap">
+        <h1>Locales del Barrio Galán</h1>
+        <p>Consumo, techo y energía generada en los cinco locales del informe (Tablas 2, 4 y 5), con el retorno estimado de cada uno.</p>
+      </div>
+    </section>
+
+    <div class="content">
+      <div class="wrap">
+        <section class="block">
+          <figure class="chart-card">
+            <h2 class="block-title">Consumo frente a energía generada</h2>
+            <div class="chart-box"><canvas id="chart-locales" role="img" aria-label="Gráfica de barras del consumo y la energía generada en cada local"></canvas></div>
+            <figcaption>En los cinco locales el sistema genera más energía de la que consumen.</figcaption>
+          </figure>
+        </section>
+
+        <section class="block">
+          <div class="table-wrap">
+            <table>
+              <caption>Locales analizados</caption>
+              <thead><tr><th scope="col">Local</th><th class="num" scope="col">Consumo (kWh/mes)</th><th scope="col">Techo</th><th scope="col">Sistema</th><th class="num" scope="col">Generado (kWh/mes)</th><th class="num" scope="col">Generado / consumo</th><th class="num" scope="col">Retorno estimado</th></tr></thead>
+              <tbody id="locales-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="block">
+          <div class="table-wrap">
+            <table>
+              <caption>Presupuesto de los sistemas (Tabla 5 del informe)</caption>
+              <thead><tr><th scope="col">Rubro</th><th class="num" scope="col" id="budget-head-1"></th><th class="num" scope="col" id="budget-head-2"></th></tr></thead>
+              <tbody id="budget-body"></tbody>
+              <tfoot><tr><th scope="row">Total</th><td class="num" id="budget-total-1"></td><td class="num" id="budget-total-2"></td></tr></tfoot>
+            </table>
+          </div>
+        </section>
+
+        <section class="block" aria-labelledby="retorno-title">
+          <h2 class="block-title" id="retorno-title">Retorno de la inversión</h2>
+          <p class="block-intro">El Sistema 2 usa como referencia el consumo promedio de los cuatro locales que lo comparten.</p>
+          <div id="roi-cards" class="two-up"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Informe de Física de Campos · Barrio Galán, Barranquilla · Araujo, Ovalle, Romero y Pinto · 2026</p>
+      <p>Gráficas: <a href="https://www.chartjs.org">Chart.js</a> · Clima: <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0)</p>
+    </div>
+  </footer>
+
+  <script src="assets/vendor/chartjs/chart.umd.js"></script>
+  <script src="assets/js/data/project.js"></script>
+  <script src="assets/js/core/solar.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/pages/locales.js"></script>
+</body>
+</html>

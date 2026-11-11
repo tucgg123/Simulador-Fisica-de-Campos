@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clima | Sistema fotovoltaico Barrio Galán</title>
+  <meta name="description" content="Pronóstico de 5 días en Barranquilla y energía estimada de los sistemas solares según el sol de cada día.">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <img src="assets/img/favicon.svg" alt="" width="40" height="40">
+        <span><strong>Sistema fotovoltaico</strong><span>Barrio Galán, Barranquilla</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Principal">
+        <a href="index.html">Simulador</a>
+        <a href="locales.html">Locales</a>
+        <a href="fisica.html">Física de campos</a>
+        <a href="clima.html" aria-current="page">Clima</a>
+        <a href="modelos.html">Modelos 3D</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="page-head">
+      <div class="wrap">
+        <h1>Clima en Barranquilla</h1>
+        <p>Pronóstico de 5 días y cuánta energía generarían los sistemas con el sol de cada día.</p>
+      </div>
+    </section>
+
+    <div class="content">
+      <div class="wrap">
+        <p id="source" class="source" role="status">Consultando el pronóstico…</p>
+        <section class="weather-now" aria-label="Clima de hoy">
+          <div>
+            <p class="place">Barranquilla, Atlántico, Colombia</p>
+            <p id="now-temp" class="temp">—</p>
+            <p id="now-cond" class="cond"></p>
+            <p id="now-date" class="place" style="margin-top:6px"></p>
+          </div>
+          <span id="now-icon"></span>
+        </section>
+        <ul id="days" class="days" aria-label="Pronóstico de 5 días"></ul>
+        <div class="note-box"><p id="solar-summary"></p></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Informe de Física de Campos · Barrio Galán, Barranquilla · Araujo, Ovalle, Romero y Pinto · 2026</p>
+      <p>Gráficas: <a href="https://www.chartjs.org">Chart.js</a> · Clima: <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0)</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/data/project.js"></script>
+  <script src="assets/js/core/solar.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/pages/weather.js"></script>
+</body>
+</html>

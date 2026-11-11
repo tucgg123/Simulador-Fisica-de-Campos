@@ -1,667 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema Fotovoltaico — Barrio Galán, Barranquilla</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<style>
-:root {
-  --az1:#0a2463; --az2:#1e5fa8; --az3:#4a9fd4;
-  --vd1:#1a5c34; --vd2:#2d8653; --vd3:#4cbb7f; --vda:#6ee7a8;
-  --bl:#f5f9f7; --blp:#ffffff; --gc:#e8f0ec;
-  --txt:#0d1f15; --sh:rgba(10,36,99,.12);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--bl);color:var(--txt);overflow-x:hidden}
-
-/* HEADER */
-header{background:linear-gradient(135deg,var(--az1) 0%,var(--az2) 55%,var(--vd1) 100%);padding:3rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
-header::before{content:'';position:absolute;top:-60px;left:-60px;width:300px;height:300px;border-radius:50%;background:rgba(78,187,127,.12)}
-header::after{content:'';position:absolute;bottom:-80px;right:-40px;width:350px;height:350px;border-radius:50%;background:rgba(74,159,212,.10)}
-.badge{display:inline-block;background:rgba(110,231,168,.2);border:1px solid rgba(110,231,168,.5);color:var(--vda);font-family:'Syne',sans-serif;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;padding:.4rem 1rem;border-radius:50px;margin-bottom:1.2rem}
-header h1{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,5vw,3rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:.8rem;position:relative;z-index:1}
-header h1 span{color:var(--vda)}
-header p{color:rgba(255,255,255,.75);font-size:.98rem;font-weight:300;position:relative;z-index:1}
-
-/* TABS */
-.nav-tabs{display:flex;justify-content:center;background:var(--blp);border-bottom:2px solid var(--gc);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px var(--sh);overflow-x:auto}
-.tab-btn{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:500;padding:.95rem 1.3rem;border:none;background:none;cursor:pointer;color:#6b7c8a;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
-.tab-btn:hover{color:var(--az2);background:rgba(74,159,212,.06)}
-.tab-btn.active{color:var(--az1);border-bottom-color:var(--vd2)}
-
-/* SECTIONS */
-.section{display:none;padding:2rem 1.4rem;max-width:940px;margin:0 auto;animation:fi .3s ease}
-.section.active{display:block}
-@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.sec-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;color:var(--az1);margin-bottom:.3rem}
-.sec-sub{color:var(--vd2);font-size:.88rem;margin-bottom:1.8rem;font-weight:500}
-
-/* CARDS */
-.card{background:var(--blp);border:1.5px solid var(--gc);border-radius:14px;padding:1.4rem;box-shadow:0 2px 10px var(--sh)}
-.card h3{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:600;color:var(--az1);margin-bottom:1rem;padding-bottom:.6rem;border-bottom:1px solid var(--gc)}
-
-/* FORMULA BOX */
-.fbox{background:var(--az1);border-radius:14px;padding:1.3rem;margin-bottom:1.5rem;color:#fff}
-.fbox h4{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:600;opacity:.65;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.7rem}
-.frow{font-size:.86rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}
-.frow code{background:rgba(255,255,255,.12);padding:.15rem .5rem;border-radius:5px;font-family:monospace;font-size:.82rem;color:var(--vda)}
-
-/* INPUTS */
-.ig2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.4rem}
-@media(max-width:580px){.ig2{grid-template-columns:1fr}}
-.fg{margin-bottom:.85rem}
-.fg label{display:block;font-size:.76rem;font-weight:500;color:#4a5568;margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em}
-.fg input,.fg select{width:100%;padding:.58rem .9rem;border:1.5px solid var(--gc);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.92rem;color:var(--txt);background:var(--bl);outline:none;transition:border-color .2s}
-.fg input:focus,.fg select:focus{border-color:var(--az3)}
-
-/* PRESET BTNS */
-.presets{display:flex;gap:.8rem;margin-bottom:1.4rem;flex-wrap:wrap}
-.pb{flex:1;min-width:130px;padding:.9rem 1rem;border:2px solid var(--gc);border-radius:12px;background:var(--blp);cursor:pointer;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:600;color:var(--az1);transition:all .2s;text-align:center}
-.pb:hover{border-color:var(--az3);background:#eef6fb}
-.pb.active{border-color:var(--vd2);background:#f0fdf5;color:var(--vd1)}
-.pb-icon{font-size:1.4rem;display:block;margin-bottom:.25rem}
-.pb-sub{font-size:.72rem;color:#6b7c8a;font-weight:400}
-
-/* CALC BTN */
-.cbtn{width:100%;padding:1rem;background:linear-gradient(135deg,var(--az1),var(--vd2));color:#fff;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:.98rem;font-weight:600;cursor:pointer;transition:opacity .2s,transform .1s;margin-bottom:1.4rem}
-.cbtn:hover{opacity:.9;transform:translateY(-1px)}
-
-/* ALERTS */
-.alert{border-radius:12px;padding:.9rem 1.1rem;font-size:.88rem;margin-bottom:1rem;display:none}
-.aerr{background:#fef2f2;border:1.5px solid #fca5a5;color:#7f1d1d}
-.awrn{background:#fffbeb;border:1.5px solid #fcd34d;color:#78350f}
-
-/* RESULT CARDS */
-.rg4{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;margin-bottom:1.4rem}
-.rg3{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1.4rem}
-@media(max-width:600px){.rg4{grid-template-columns:1fr 1fr}.rg3{grid-template-columns:1fr 1fr}}
-.rc{background:var(--blp);border:1.5px solid var(--gc);border-radius:12px;padding:1rem;text-align:center;box-shadow:0 2px 8px var(--sh)}
-.rc.hl{border-color:var(--vd2);background:#f0fdf5}
-.rc.hl2{border-color:var(--az3);background:#e8f4fd}
-.rl{font-size:.73rem;text-transform:uppercase;letter-spacing:.08em;color:#6b7c8a;font-weight:500;margin-bottom:.35rem}
-.rv{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:700;color:var(--az1)}
-.rc.hl .rv{color:var(--vd1)}
-.rc.hl2 .rv{color:var(--az2)}
-
-/* TABLES */
-.tw{overflow-x:auto;border-radius:12px;border:1.5px solid var(--gc);margin-bottom:1.5rem}
-table{width:100%;border-collapse:collapse;font-size:.85rem}
-thead tr{background:var(--az1)}
-thead th{color:#fff;padding:.65rem 1rem;font-family:'Syne',sans-serif;font-weight:500;text-align:left;white-space:nowrap}
-tbody tr:nth-child(even){background:#f0fdf5}
-tbody td{padding:.58rem 1rem;border-bottom:1px solid var(--gc)}
-
-/* WEATHER */
-.who{background:linear-gradient(135deg,var(--az1),var(--az2));border-radius:18px;padding:1.8rem;color:#fff;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem;flex-wrap:wrap;gap:1rem}
-.wt{font-family:'Syne',sans-serif;font-size:3.2rem;font-weight:800}
-.wc{font-size:1.05rem;opacity:.85;margin-top:.25rem}
-.wl{font-size:.82rem;opacity:.6;margin-top:.2rem}
-.wgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin-bottom:1.4rem}
-@media(max-width:580px){.wgrid{grid-template-columns:1fr 1fr}.wgrid .dc:last-child{grid-column:span 2}}
-.dc{background:var(--blp);border:1.5px solid var(--gc);border-radius:14px;padding:.9rem;text-align:center;box-shadow:0 2px 8px var(--sh);transition:transform .2s}
-.dc:hover{transform:translateY(-3px)}
-.dn{font-family:'Syne',sans-serif;font-size:.75rem;font-weight:600;color:var(--az1);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.45rem}
-.di{font-size:1.8rem;margin-bottom:.4rem}
-.dt{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--az1)}
-.dr{font-size:.74rem;color:#6b7c8a;margin-top:.25rem}
-.rb{height:4px;background:var(--gc);border-radius:4px;margin-top:.45rem;overflow:hidden}
-.rf{height:100%;background:linear-gradient(90deg,var(--az3),var(--vd3));border-radius:4px}
-.wnote{background:#e8f4fd;border-left:4px solid var(--az3);border-radius:0 10px 10px 0;padding:.9rem 1.1rem;font-size:.86rem;color:var(--az1)}
-.snote{background:#f0fdf5;border-left:4px solid var(--vd2);border-radius:0 10px 10px 0;padding:.9rem 1.1rem;font-size:.86rem;color:var(--vd1);margin-top:1rem}
-
-/* PHYSICS */
-.physgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.4rem}
-@media(max-width:580px){.physgrid{grid-template-columns:1fr}}
-.phcard{background:var(--blp);border:1.5px solid var(--gc);border-radius:14px;padding:1.3rem;box-shadow:0 2px 10px var(--sh)}
-.phcard h3{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;color:var(--az1);margin-bottom:.8rem;display:flex;align-items:center;gap:7px}
-.sys-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 0;border-bottom:1px solid var(--gc);font-size:.86rem}
-.sys-row:last-child{border-bottom:none}
-.sys-label{color:#6b7c8a}
-.sys-val{font-family:'Syne',sans-serif;font-weight:600;color:var(--az1)}
-.sys-val.ok{color:var(--vd2)}
-.limit-note{background:#fff8e1;border:1.5px solid #f0c030;border-radius:10px;padding:.8rem 1rem;font-size:.82rem;color:#78350f;margin-top:1rem}
-.limit-note strong{color:#92400e}
-
-/* MODELS */
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
-@media(max-width:580px){.mgrid{grid-template-columns:1fr}}
-.mcard{background:var(--blp);border:1.5px solid var(--gc);border-radius:16px;overflow:hidden;box-shadow:0 4px 16px var(--sh);transition:transform .25s}
-.mcard:hover{transform:translateY(-4px)}
-.membed{width:100%;height:220px;border:none;display:block}
-.mprev{height:220px;background:linear-gradient(135deg,#1a5c34,#0a2463);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem}
-.mprev span{font-size:3rem}
-.mprev p{font-family:'Syne',sans-serif;font-size:.78rem;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase}
-.minfo{padding:1.1rem}
-.mname{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:700;color:var(--az1);margin-bottom:.35rem}
-.mdesc{font-size:.82rem;color:#6b7c8a;line-height:1.5;margin-bottom:.9rem}
-.mlbtn{display:inline-flex;align-items:center;gap:6px;padding:.5rem 1rem;background:linear-gradient(135deg,var(--az1),var(--vd1));color:#fff;text-decoration:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:600;transition:opacity .2s}
-.mlbtn:hover{opacity:.85}
-
-/* LOCALES TABLE */
-.local-badge{display:inline-block;padding:.2rem .6rem;border-radius:6px;font-size:.75rem;font-weight:600}
-.lbv{background:#f0fdf5;color:var(--vd1)}
-.lba{background:#e8f4fd;color:var(--az2)}
-
-/* CHART */
-.chart-wrap{background:var(--blp);border:1.5px solid var(--gc);border-radius:14px;padding:1.3rem;box-shadow:0 2px 10px var(--sh);margin-bottom:1.4rem}
-.chart-wrap h3{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:600;color:var(--az1);margin-bottom:1rem}
-
-footer{background:var(--az1);color:rgba(255,255,255,.6);text-align:center;padding:1.4rem;font-size:.8rem;margin-top:3rem}
-footer span{color:var(--vda)}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador de recuperación de la inversión | Sistema fotovoltaico Barrio Galán</title>
+  <meta name="description" content="Calcula en cuántos meses se recupera la inversión de un sistema de paneles solares en el Barrio Galán, Barranquilla.">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-<header>
-  <div class="badge">Informe de Física de Campos — Barrio Galán, Barranquilla</div>
-  <h1>Sistema Fotovoltaico <span>Distribuido</span><br>Optimización Energética</h1>
-  <p>Araujo · Ovalle · Romero · Pinto &nbsp;|&nbsp; Zona Comercial Barrio Galán, Barranquilla</p>
-</header>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <img src="assets/img/favicon.svg" alt="" width="40" height="40">
+        <span><strong>Sistema fotovoltaico</strong><span>Barrio Galán, Barranquilla</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Principal">
+        <a href="index.html" aria-current="page">Simulador</a>
+        <a href="locales.html">Locales</a>
+        <a href="fisica.html">Física de campos</a>
+        <a href="clima.html">Clima</a>
+        <a href="modelos.html">Modelos 3D</a>
+      </nav>
+    </div>
+  </header>
 
-<nav class="nav-tabs">
-  <button class="tab-btn active" onclick="showTab('sim',this)">☀️ Simulador</button>
-  <button class="tab-btn" onclick="showTab('locales',this)">🏪 Locales</button>
-  <button class="tab-btn" onclick="showTab('fisica',this)">⚡ Física de Campos</button>
-  <button class="tab-btn" onclick="showTab('clima',this)">🌤️ Clima</button>
-  <button class="tab-btn" onclick="showTab('modelos',this)">🧊 Modelos 3D</button>
-</nav>
-
-<!-- ===== SIMULADOR ===== -->
-<section id="sim" class="section active">
-  <h2 class="sec-title">Simulador de Recuperación de Inversión</h2>
-  <p class="sec-sub">Panel Jinko Solar Tiger Neo JKM450N-54HL4R-V · 450 W · 2 m² · 30 kg</p>
-
-  <div class="fbox">
-    <h4>📐 Fórmulas del proyecto</h4>
-    <div class="frow">⚡ Generación mensual: <code>(450 W × N paneles × 6 h/día × 30 días) / 1000</code></div>
-    <div class="frow">🏗️ Carga estructural: <code>(N × 30 kg) / (N × 2 m²) = 15 kg/m² → debe ser ≤ capacidad/2</code></div>
-    <div class="frow">📅 Retorno de inversión: <code>Presupuesto / ((Generado − Consumo) × $800/kWh)</code></div>
-  </div>
-
-  <div class="presets">
-    <button class="pb active" id="pb1" onclick="setPreset(1,this)">
-      <span class="pb-icon">🌞</span>Sistema 1<span class="pb-sub">25 paneles · Concreto</span>
-    </button>
-    <button class="pb" id="pb2" onclick="setPreset(2,this)">
-      <span class="pb-icon">🌤️</span>Sistema 2<span class="pb-sub">20 paneles · Fibrocemento</span>
-    </button>
-    <button class="pb" id="pb3" onclick="setPreset(3,this)">
-      <span class="pb-icon">⚙️</span>Personalizado<span class="pb-sub">Configura tus valores</span>
-    </button>
-  </div>
-
-  <div class="ig2">
-    <div class="card">
-      <h3>☀️ Configuración del sistema</h3>
-      <div class="fg" id="pg" style="display:none">
-        <label>Cantidad de paneles</label>
-        <input type="number" id="paneles" value="25" min="1" max="200">
+  <main id="contenido">
+    <section class="page-head">
+      <div class="wrap">
+        <h1>Simulador de recuperación de la inversión</h1>
+        <p>Calcula en cuántos meses se paga un sistema de paneles solares en un local del Barrio Galán, según su consumo y su techo. Panel: Jinko Solar Tiger Neo JKM450N-54HL4R-V, 450 W, 2 m² y 30 kg.</p>
       </div>
-      <div class="fg">
-        <label>Consumo mensual (kWh) — del recibo de luz</label>
-        <input type="number" id="consumo" value="1313" min="1">
-      </div>
-      <div class="fg">
-        <label>Tarifa eléctrica (COP/kWh)</label>
-        <input type="number" id="tarifa" value="800">
-      </div>
-    </div>
-    <div class="card">
-      <h3>🏗️ Tipo de techo</h3>
-      <div class="fg">
-        <label>Material del techo</label>
-        <select id="techo">
-          <option value="45">Fibrocemento / Teja Ternil — 45 kg/m²</option>
-          <option value="30">Lámina metálica — 30 kg/m²</option>
-          <option value="150" selected>Concreto — 150 kg/m²</option>
-        </select>
-      </div>
-      <div class="fg">
-        <label>Voltaje del sistema (V)</label>
-        <input type="number" id="voltaje" value="220">
-      </div>
-      <div class="fg">
-        <label>Resistencia conductores (Ω)</label>
-        <input type="number" id="resist" value="0.2" step="0.01">
-      </div>
-    </div>
-  </div>
+    </section>
 
-  <button class="cbtn" onclick="calcular()">⚡ Calcular Recuperación de Inversión</button>
+    <div class="content">
+      <div class="wrap">
+        <section class="block" aria-labelledby="formulas-title">
+          <h2 class="visually-hidden" id="formulas-title">Fórmulas del proyecto</h2>
+          <dl class="formulas">
+            <div><dt>Generación mensual</dt><dd><code>(450 W × N paneles × 6 h × 30 días) / 1000</code></dd></div>
+            <div><dt>Carga sobre el techo</dt><dd><code>(N × 30 kg) / (N × 2 m²) = 15 kg/m² ≤ capacidad / 2</code></dd></div>
+            <div><dt>Retorno de inversión</dt><dd><code>Presupuesto / ((Generado − Consumo) × tarifa)</code></dd></div>
+            <div><dt>Corriente y pérdidas</dt><dd><code>I = P / V</code> · <code>P = I² × R</code></dd></div>
+          </dl>
+        </section>
 
-  <div class="alert aerr" id="aerr"></div>
-  <div class="alert awrn" id="awrn"></div>
+        <div class="sim-layout">
+          <form id="sim-form" novalidate onsubmit="return false">
+            <fieldset>
+              <legend>Elige un sistema</legend>
+              <div id="presets" class="presets"></div>
+            </fieldset>
 
-  <div id="res" style="display:none">
-    <div class="rg4">
-      <div class="rc hl">
-        <div class="rl">Recuperación</div>
-        <div class="rv" id="r1">—</div>
-      </div>
-      <div class="rc">
-        <div class="rl">Presupuesto total</div>
-        <div class="rv" id="r2">—</div>
-      </div>
-      <div class="rc">
-        <div class="rl">Generación/mes</div>
-        <div class="rv" id="r3">—</div>
-      </div>
-      <div class="rc">
-        <div class="rl">Excedente/mes</div>
-        <div class="rv" id="r4">—</div>
-      </div>
-    </div>
+            <fieldset>
+              <legend>Datos del local</legend>
+              <div class="fields">
+                <div class="field">
+                  <label for="panels">Cantidad de paneles</label>
+                  <input id="panels" type="number" inputmode="numeric" min="1" max="200" step="1" aria-describedby="panels-hint">
+                  <span id="panels-hint" class="hint"></span>
+                </div>
+                <div class="field">
+                  <label for="consumption">Consumo mensual <span class="unit">(kWh)</span></label>
+                  <input id="consumption" type="number" inputmode="decimal" min="1" step="any" aria-describedby="consumption-hint">
+                  <span id="consumption-hint" class="hint">Aparece en el recibo de luz.</span>
+                </div>
+                <div class="field field-wide">
+                  <label for="roof">Tipo de techo</label>
+                  <select id="roof"></select>
+                </div>
+                <div class="field">
+                  <label for="tariff">Tarifa eléctrica <span class="unit">(COP/kWh)</span></label>
+                  <input id="tariff" type="number" inputmode="decimal" min="1" step="any">
+                </div>
 
-    <div class="chart-wrap">
-      <h3>📊 Proyección mensual de recuperación</h3>
-      <canvas id="chartRec" height="90"></canvas>
-    </div>
+                <p class="subgroup">Datos eléctricos</p>
+                <div class="field">
+                  <label for="voltage">Voltaje del sistema <span class="unit">(V)</span></label>
+                  <input id="voltage" type="number" inputmode="decimal" min="1" step="any">
+                </div>
+                <div class="field">
+                  <label for="resistance">Resistencia de los conductores <span class="unit">(Ω)</span></label>
+                  <input id="resistance" type="number" inputmode="decimal" min="0" step="0.01">
+                </div>
+              </div>
+            </fieldset>
+          </form>
 
-    <h3 style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:600;color:var(--az1);margin-bottom:.7rem">Tabla detallada mes a mes</h3>
-    <div class="tw">
-      <table>
-        <thead><tr><th>Mes</th><th>Ahorro mensual</th><th>Acumulado</th><th>% Recuperado</th><th>Estado</th></tr></thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
+          <div>
+            <div id="error" class="alert alert-error" role="alert" hidden></div>
+            <div id="warning" class="alert alert-warning" role="status" hidden></div>
 
-<!-- ===== LOCALES ===== -->
-<section id="locales" class="section">
-  <h2 class="sec-title">Locales del Barrio Galán</h2>
-  <p class="sec-sub">Datos de consumo, techo y resultados de generación — Tabla 2 y 4 del informe</p>
+            <div id="results" hidden>
+              <div class="result-main">
+                <p class="label">Tiempo para recuperar la inversión</p>
+                <p id="payback-value" class="value"></p>
+                <p id="payback-sub" class="sub"></p>
+              </div>
 
-  <div class="chart-wrap">
-    <h3>📊 Consumo vs. Energía Generada por el sistema solar (kWh/mes)</h3>
-    <canvas id="chartLocales" height="100"></canvas>
-  </div>
-
-  <div class="tw">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th><th>Establecimiento</th><th>Consumo kWh/mes</th><th>Techo</th><th>Sistema</th><th>Generado kWh/mes</th><th>Ratio</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td><td><strong>Ferretería la 4</strong></td><td>120</td>
-          <td>Fibrocemento · 1 agua · 144 m²</td>
-          <td><span class="local-badge lba">Sistema 2 · 20 paneles</span></td>
-          <td>1.620</td><td><span class="local-badge lbv">×13.5</span></td>
-        </tr>
-        <tr>
-          <td>2</td><td><strong>Restaurante Don Pedro</strong></td><td>1.313</td>
-          <td>Concreto · Plano · 180 m²</td>
-          <td><span class="local-badge lbv">Sistema 1 · 25 paneles</span></td>
-          <td>2.025</td><td><span class="local-badge lbv">×1.54</span></td>
-        </tr>
-        <tr>
-          <td>3</td><td><strong>Miscelánea la Mano de Dios</strong></td><td>456</td>
-          <td>Fibrocemento · 2 aguas · 200 m²</td>
-          <td><span class="local-badge lba">Sistema 2 · 20 paneles</span></td>
-          <td>1.620</td><td><span class="local-badge lbv">×3.55</span></td>
-        </tr>
-        <tr>
-          <td>4</td><td><strong>Restaurante Feng Ze Yuan</strong></td><td>774</td>
-          <td>Fibrocemento · 2 aguas · 200 m²</td>
-          <td><span class="local-badge lba">Sistema 2 · 20 paneles</span></td>
-          <td>1.620</td><td><span class="local-badge lbv">×2.09</span></td>
-        </tr>
-        <tr>
-          <td>5</td><td><strong>Droguería la Rebaja</strong></td><td>651</td>
-          <td>Fibrocemento · 2 aguas · 200 m²</td>
-          <td><span class="local-badge lba">Sistema 2 · 20 paneles</span></td>
-          <td>1.620</td><td><span class="local-badge lbv">×2.49</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:600;color:var(--az1);margin-bottom:.8rem">💰 Presupuesto de los sistemas (Tabla 5 del informe)</h3>
-  <div class="tw">
-    <table>
-      <thead><tr><th>Ítem</th><th>Sistema 1 (25 paneles)</th><th>Sistema 2 (20 paneles)</th></tr></thead>
-      <tbody>
-        <tr><td>Paneles Jinko Solar 450W (×$350.000 c/u)</td><td>$8.750.000</td><td>$7.000.000</td></tr>
-        <tr><td>Inversor</td><td>$6.000.000</td><td>$4.000.000</td></tr>
-        <tr><td>Estructura de soporte</td><td>$1.800.000</td><td>$1.200.000</td></tr>
-        <tr><td>Cableado y protecciones</td><td>$1.200.000</td><td>$900.000</td></tr>
-        <tr><td>Instalación</td><td>$2.000.000</td><td>$1.500.000</td></tr>
-        <tr><td>Mantenimiento</td><td>$500.000</td><td>$500.000</td></tr>
-        <tr style="background:#f0fdf5;font-weight:700"><td><strong>TOTAL</strong></td><td><strong>$20.250.000 COP</strong></td><td><strong>$15.100.000 COP</strong></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="ig2" style="margin-top:1rem">
-    <div class="rc hl" style="padding:1.2rem">
-      <div class="rl">Retorno Sistema 1 (Don Pedro)</div>
-      <div class="rv" style="font-size:1.6rem">≈ 35.55 meses</div>
-      <div style="font-size:.78rem;color:#6b7c8a;margin-top:.3rem">Aprox. 3 años (consumo 1313 kWh/mes)</div>
-    </div>
-    <div class="rc hl2" style="padding:1.2rem">
-      <div class="rl">Retorno Sistema 2 (promedio)</div>
-      <div class="rv" style="font-size:1.6rem">≈ 16.85 meses</div>
-      <div style="font-size:.78rem;color:#6b7c8a;margin-top:.3rem">Usando consumo promedio 500.25 kWh/mes</div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== FÍSICA DE CAMPOS ===== -->
-<section id="fisica" class="section">
-  <h2 class="sec-title">Física de Campos Aplicada</h2>
-  <p class="sec-sub">Ley de Ampère · Efecto Joule · Campo eléctrico — Cálculos del informe (r = 5 cm, V = 220 V)</p>
-
-  <div class="physgrid">
-    <div class="phcard">
-      <h3>🔋 Corriente eléctrica (Ley de Watt)</h3>
-      <div class="sys-row"><span class="sys-label">Sistema 1 — P = 11.250 W</span><span class="sys-val">I = P/V = <b>51.13 A</b></span></div>
-      <div class="sys-row"><span class="sys-label">Sistema 2 — P = 9.000 W</span><span class="sys-val">I = P/V = <b>40.90 A</b></span></div>
-      <div class="sys-row"><span class="sys-label">Fórmula</span><span class="sys-val">I = P / V</span></div>
-    </div>
-
-    <div class="phcard">
-      <h3>🧲 Campo magnético (Ley de Ampère)</h3>
-      <div class="sys-row"><span class="sys-label">B Sistema 1 (r=0.05 m)</span><span class="sys-val ok">0.2 mT = 200 μT</span></div>
-      <div class="sys-row"><span class="sys-label">B Sistema 2 (r=0.05 m)</span><span class="sys-val ok">0.2 mT = 200 μT</span></div>
-      <div class="sys-row"><span class="sys-label">Fórmula</span><span class="sys-val">B = μ₀I / (2πr)</span></div>
-      <div class="sys-row"><span class="sys-label">μ₀</span><span class="sys-val">4π × 10⁻⁷ T·m/A</span></div>
-    </div>
-
-    <div class="phcard">
-      <h3>⚡ Campo eléctrico</h3>
-      <div class="sys-row"><span class="sys-label">Ambos sistemas (d=0.05 m)</span><span class="sys-val ok">E = 4.400 V/m</span></div>
-      <div class="sys-row"><span class="sys-label">Fórmula</span><span class="sys-val">E = V / d</span></div>
-      <div class="sys-row"><span class="sys-label">Límite OMS/ICNIRP</span><span class="sys-val">5.000 V/m ✅</span></div>
-    </div>
-
-    <div class="phcard">
-      <h3>🔥 Pérdidas por Efecto Joule</h3>
-      <div class="sys-row"><span class="sys-label">Sistema 1 (R = 0.2 Ω)</span><span class="sys-val">P = I²R = <b>522.85 W</b></span></div>
-      <div class="sys-row"><span class="sys-label">Sistema 2 (R = 0.2 Ω)</span><span class="sys-val">P = I²R = <b>334.56 W</b></span></div>
-      <div class="sys-row"><span class="sys-label">Fórmula</span><span class="sys-val">P = I² × R</span></div>
-      <div class="sys-row"><span class="sys-label">Sistema 2 pierde</span><span class="sys-val ok">36% menos calor</span></div>
-    </div>
-  </div>
-
-  <!-- Verificación de límites OMS -->
-  <div class="card" style="margin-bottom:1.4rem">
-    <h3>🏥 Verificación de límites OMS / ICNIRP</h3>
-    <div class="tw" style="margin:0">
-      <table>
-        <thead><tr><th>Magnitud</th><th>Sistema 1</th><th>Sistema 2</th><th>Límite OMS</th><th>Estado</th></tr></thead>
-        <tbody>
-          <tr><td>Campo magnético B (a 5 cm)</td><td>200 μT</td><td>200 μT</td><td>200 μT</td><td>✅ En el límite</td></tr>
-          <tr><td>Campo magnético B (a 1 m)</td><td>&lt;&lt; 200 μT</td><td>&lt;&lt; 200 μT</td><td>200 μT</td><td>✅ Muy por debajo</td></tr>
-          <tr><td>Campo eléctrico E</td><td>4.400 V/m</td><td>4.400 V/m</td><td>5.000 V/m</td><td>✅ Bajo el límite</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="limit-note">
-      📌 <strong>Nota:</strong> El campo magnético de 200 μT se mide a tan solo 5 cm del conductor. A mayor distancia (ej. 1 m), el valor decrece drásticamente. El barrio Galán cumple con todos los estándares de seguridad electromagnética de la OMS e ICNIRP.
-    </div>
-  </div>
-
-  <!-- Simulador de campo magnético -->
-  <div class="card">
-    <h3>🔬 Simulador interactivo — Campo magnético vs. distancia</h3>
-    <div style="display:flex;align-items:center;gap:12px;margin:1rem 0">
-      <label style="font-size:.82rem;color:#4a5568;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Distancia al cable</label>
-      <input type="range" id="distSlider" min="1" max="200" value="5" style="flex:1" oninput="updateB()">
-      <span style="font-family:'Syne',sans-serif;font-size:.9rem;font-weight:600;min-width:55px" id="distVal">5 cm</span>
-    </div>
-    <div class="rg3">
-      <div class="rc hl2">
-        <div class="rl">Distancia</div>
-        <div class="rv" id="bDist">0.05 m</div>
-      </div>
-      <div class="rc">
-        <div class="rl">B Sistema 1</div>
-        <div class="rv" id="bSis1">—</div>
-      </div>
-      <div class="rc">
-        <div class="rl">B Sistema 2</div>
-        <div class="rv" id="bSis2">—</div>
-      </div>
-    </div>
-    <canvas id="chartB" height="80"></canvas>
-  </div>
-</section>
-
-<!-- ===== CLIMA ===== -->
-<section id="clima" class="section">
-  <h2 class="sec-title">Clima Semanal — Barranquilla</h2>
-  <p class="sec-sub">Pronóstico actual · Barranquilla promedia 6 horas de sol pico diarias</p>
-
-  <div class="who">
-    <div>
-      <div style="font-size:.83rem;opacity:.7;margin-bottom:.25rem">📍 Barranquilla, Atlántico, Colombia</div>
-      <div class="wt">30°C</div>
-      <div class="wc">Parcialmente soleado</div>
-      <div class="wl">Martes 19 de mayo, 2026</div>
-    </div>
-    <div style="font-size:3.5rem">⛅</div>
-  </div>
-
-  <div class="wgrid">
-    <div class="dc"><div class="dn">Mar 19</div><div class="di">⛅</div><div class="dt">31.5°C</div><div class="dr">💧 10%</div><div class="rb"><div class="rf" style="width:10%"></div></div></div>
-    <div class="dc"><div class="dn">Mié 20</div><div class="di">⛅</div><div class="dt">31.3°C</div><div class="dr">💧 10%</div><div class="rb"><div class="rf" style="width:10%"></div></div></div>
-    <div class="dc"><div class="dn">Jue 21</div><div class="di">🌦️</div><div class="dt">31.7°C</div><div class="dr">💧 40%</div><div class="rb"><div class="rf" style="width:40%"></div></div></div>
-    <div class="dc"><div class="dn">Vie 22</div><div class="di">🌧️</div><div class="dt">31.1°C</div><div class="dr">💧 50%</div><div class="rb"><div class="rf" style="width:50%"></div></div></div>
-    <div class="dc"><div class="dn">Sáb 23</div><div class="di">🌤️</div><div class="dt">31.2°C</div><div class="dr">💧 20%</div><div class="rb"><div class="rf" style="width:20%"></div></div></div>
-  </div>
-
-  <div class="wnote">📌 <strong>Resumen:</strong> Temperaturas estables ≈ 31°C. Martes y miércoles despejados. Lluvia moderada jueves–viernes (40–50%). Mejora el sábado.</div>
-  <div class="snote">☀️ <strong>Impacto solar:</strong> Barranquilla recibe en promedio <strong>6 horas de sol pico diarias</strong> — uno de los más altos de Colombia por su ubicación cercana al ecuador. Los días soleados de esta semana (mar, mié, sáb) generan la máxima producción. Las lluvias del jue–vie reducen la generación un 20–30% esos días, pero el promedio mensual utilizado en los cálculos del informe ya contempla esta variabilidad.</div>
-</section>
-
-<!-- ===== MODELOS 3D ===== -->
-<section id="modelos" class="section">
-  <h2 class="sec-title">Modelos 3D — Tinkercad</h2>
-  <p class="sec-sub">Modelos de los establecimientos analizados en el proyecto</p>
-
-  <div class="mgrid">
-    <div class="mcard">
-      <iframe class="membed"
-        src="https://www.tinkercad.com/embed/5liKQZVvrPp?editbtn=1"
-        allowfullscreen title="Restaurante Don Pedro">
-      </iframe>
-      <div class="minfo">
-        <div class="mname">Restaurante Don Pedro</div>
-        <div class="mdesc">Techo de <strong>concreto plano · 180 m²</strong> · Consumo: 1.313 kWh/mes · <strong>Sistema 1 — 25 paneles</strong> · Genera 2.025 kWh/mes (54% más de lo que consume). Retorno ≈ 35.55 meses.</div>
-        <a href="https://www.tinkercad.com/things/5liKQZVvrPp-restaurante-don-pedro?sharecode=IzePLjUiBfs589b_utUuYNEAmiDXKwP-40BzzXHRWho" target="_blank" class="mlbtn">🔗 Abrir en Tinkercad</a>
-      </div>
-    </div>
-
-    <div class="mcard">
-      <iframe class="membed"
-        src="https://www.tinkercad.com/embed/cFRBYTClPpc?editbtn=1&sharecode=iiMyr9moh2705aq_BzxNmN1wRjDDXOFfDMuvaAqBRvM"
-        allowfullscreen title="Ferretería la 4">
-      </iframe>
-      <div class="minfo">
-        <div class="mname">Ferretería la 4</div>
-        <div class="mdesc">Techo de <strong>fibrocemento · 1 agua · 144 m²</strong> · Consumo: 120 kWh/mes · <strong>Sistema 2 — 20 paneles</strong> · Genera 1.620 kWh/mes (13.5× su consumo). Retorno más rápido de todos los locales.</div>
-        <a href="https://www.tinkercad.com/things/cFRBYTClPpc-ferreteria?sharecode=iiMyr9moh2705aq_BzxNmN1wRjDDXOFfDMuvaAqBRvM" target="_blank" class="mlbtn">🔗 Abrir en Tinkercad</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  Simulación Física de Campos · <span>Barrio Galán, Barranquilla</span> · Araujo · Ovalle · Romero · Pinto · 2026
-</footer>
-
-<script>
-// ---- TABS ----
-function showTab(id, btn) {
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-  if(id==='locales' && !window.chartLocalesDone) buildChartLocales();
-  if(id==='fisica' && !window.chartBDone) buildChartB();
-}
-
-// ---- FORMAT ----
-function cop(n){ return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(n); }
-
-// ---- PRESET ----
-const PRESUPUESTO = {1: 20250000, 2: 15100000};
-function setPreset(n, btn) {
-  document.querySelectorAll('.pb').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const pg = document.getElementById('pg');
-  if(n===3){ pg.style.display='block'; return; }
-  pg.style.display='none';
-  document.getElementById('paneles').value = n===1?25:20;
-  document.getElementById('consumo').value  = n===1?1313:500;
-  document.getElementById('techo').value    = n===1?'150':'45';
-}
-
-// ---- CALCULAR ----
-let chartRec = null;
-function calcular() {
-  const paneles = parseInt(document.getElementById('paneles').value)||0;
-  const consumo = parseFloat(document.getElementById('consumo').value)||0;
-  const cap     = parseFloat(document.getElementById('techo').value);
-  const tarifa  = parseFloat(document.getElementById('tarifa').value)||800;
-  const V       = parseFloat(document.getElementById('voltaje').value)||220;
-  const R       = parseFloat(document.getElementById('resist').value)||0.2;
-  const preset  = [document.getElementById('pb1'),document.getElementById('pb2')].findIndex(b=>b.classList.contains('active'));
-
-  document.getElementById('aerr').style.display='none';
-  document.getElementById('awrn').style.display='none';
-  document.getElementById('res').style.display='none';
-
-  const generado = (450*paneles*180)/1000;
-  const presupuesto = (preset===0) ? PRESUPUESTO[1] : (preset===1) ? PRESUPUESTO[2]
-    : (281400+240000+72000+48000+80000)*paneles+500000;
-
-  const carga = 15; // siempre 15 kg/m²
-  if(carga > cap/2){ showErr(`🏗️ Carga estructural (${carga} kg/m²) supera el límite del techo seleccionado (${cap/2} kg/m²).`); return; }
-  if(generado <= consumo){ showErr(`⚡ El sistema genera ${generado.toFixed(0)} kWh/mes pero el consumo es ${consumo} kWh/mes. Añade más paneles.`); return; }
-
-  // Para Sistema 2 el informe usa consumo promedio 500.25 kWh/mes
-  const consumoCalc = (preset===1) ? 500.25 : consumo;
-  const exc = generado - consumoCalc;
-  const ahorro = exc * tarifa;
-  const rec = presupuesto / ahorro;
-
-  document.getElementById('r1').textContent = rec.toFixed(1)+' meses';
-  document.getElementById('r2').textContent = cop(presupuesto);
-  document.getElementById('r3').textContent = generado.toFixed(0)+' kWh';
-  document.getElementById('r4').textContent = (generado - consumoCalc).toFixed(0)+' kWh';
-
-  // Tabla
-  const tbody = document.getElementById('tbody');
-  tbody.innerHTML='';
-  let acum=0; const meses=Math.ceil(rec*1.4);
-  const labels=[],dataAcum=[],dataPres=[];
-  for(let m=1;m<=Math.min(meses,72);m++){
-    acum+=ahorro;
-    const pct=Math.min(acum/presupuesto*100,100);
-    const ok=acum>=presupuesto;
-    labels.push('Mes '+m);
-    dataAcum.push(Math.round(acum));
-    dataPres.push(presupuesto);
-    tbody.innerHTML+=`<tr>
-      <td><strong>${m}</strong></td>
-      <td>${cop(Math.round(ahorro))}</td>
-      <td style="color:${ok?'#1a5c34':'#c0392b'};font-weight:600">${cop(Math.round(acum))}</td>
-      <td><div style="display:flex;align-items:center;gap:6px">
-        <div style="flex:1;height:5px;background:#e8f0ec;border-radius:3px;overflow:hidden">
-          <div style="width:${pct.toFixed(1)}%;height:100%;background:linear-gradient(90deg,#4a9fd4,#4cbb7f);border-radius:3px"></div>
+              <dl class="metrics">
+                <div><dt>Presupuesto total</dt><dd id="m-budget"></dd></div>
+                <div><dt>Generación al mes</dt><dd id="m-generation"></dd></div>
+                <div><dt>Excedente al mes</dt><dd id="m-surplus"></dd></div>
+                <div><dt>Ahorro al mes</dt><dd id="m-saving"></dd></div>
+                <div><dt>Corriente (I = P / V)</dt><dd id="m-current"></dd></div>
+                <div><dt>Pérdidas por efecto Joule</dt><dd id="m-joule"></dd></div>
+              </dl>
+            </div>
+          </div>
         </div>
-        <span style="font-size:.78rem;min-width:34px">${pct.toFixed(0)}%</span>
-      </div></td>
-      <td>${ok?'✅ Recuperado':'⏳ Pendiente'}</td>
-    </tr>`;
-    if(ok) break;
-  }
 
-  // Chart
-  if(chartRec) chartRec.destroy();
-  chartRec = new Chart(document.getElementById('chartRec'),{
-    type:'line',
-    data:{
-      labels,
-      datasets:[
-        {label:'Acumulado recuperado (COP)',data:dataAcum,borderColor:'#2d8653',backgroundColor:'rgba(45,134,83,.1)',fill:true,tension:.4,pointRadius:3},
-        {label:'Inversión total (COP)',data:dataPres,borderColor:'#1e5fa8',borderDash:[6,4],backgroundColor:'transparent',pointRadius:0}
-      ]
-    },
-    options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{ticks:{callback:v=>cop(v)}}}}
-  });
+        <section id="projection" class="block projection" aria-labelledby="proyeccion-title" hidden>
+          <figure class="chart-card">
+            <h3 id="proyeccion-title">Proyección mensual de la recuperación</h3>
+            <div class="chart-box"><canvas id="chart-payback" role="img" aria-label="Gráfica del dinero recuperado mes a mes frente a la inversión total"></canvas></div>
+            <figcaption id="chart-summary"></figcaption>
+          </figure>
 
-  document.getElementById('res').style.display='block';
-}
+          <details class="schedule">
+            <summary>Ver la tabla mes a mes</summary>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th class="num" scope="col">Mes</th><th class="num" scope="col">Ahorro del mes</th><th class="num" scope="col">Acumulado</th><th scope="col">Recuperado</th><th scope="col">Estado</th></tr></thead>
+                <tbody id="schedule-body"></tbody>
+              </table>
+            </div>
+          </details>
+        </section>
+      </div>
+    </div>
+  </main>
 
-function showErr(msg){ const el=document.getElementById('aerr'); el.textContent=msg; el.style.display='block'; }
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Informe de Física de Campos · Barrio Galán, Barranquilla · Araujo, Ovalle, Romero y Pinto · 2026</p>
+      <p>Gráficas: <a href="https://www.chartjs.org">Chart.js</a> · Clima: <a href="https://open-meteo.com">Open-Meteo</a> (CC BY 4.0)</p>
+    </div>
+  </footer>
 
-// ---- CHART LOCALES ----
-window.chartLocalesDone=false;
-function buildChartLocales(){
-  window.chartLocalesDone=true;
-  new Chart(document.getElementById('chartLocales'),{
-    type:'bar',
-    data:{
-      labels:['Ferretería la 4','Rest. Don Pedro','Misc. Mano de Dios','Rest. Feng Ze Yuan','Droguería la Rebaja'],
-      datasets:[
-        {label:'Consumo (kWh/mes)',data:[120,1313,456,774,651],backgroundColor:'rgba(30,95,168,.7)',borderRadius:6},
-        {label:'Generado (kWh/mes)',data:[1620,2025,1620,1620,1620],backgroundColor:'rgba(45,134,83,.7)',borderRadius:6}
-      ]
-    },
-    options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+' kWh'}}}}
-  });
-}
-
-// ---- CAMPO MAGNÉTICO INTERACTIVO ----
-window.chartBDone=false;
-let chartBObj=null;
-function mu0(){return 4*Math.PI*1e-7;}
-function calcB(I,r){return (mu0()*I)/(2*Math.PI*r);}
-
-function updateB(){
-  const cm=parseInt(document.getElementById('distSlider').value);
-  const r=cm/100;
-  const b1=calcB(51.13,r)*1e6; // μT
-  const b2=calcB(40.90,r)*1e6;
-  document.getElementById('distVal').textContent=cm+' cm';
-  document.getElementById('bDist').textContent=r.toFixed(2)+' m';
-  document.getElementById('bSis1').textContent=b1.toFixed(1)+' μT';
-  document.getElementById('bSis2').textContent=b2.toFixed(1)+' μT';
-}
-
-function buildChartB(){
-  window.chartBDone=true;
-  const dists=[1,2,3,4,5,10,15,20,30,50,75,100,150,200];
-  const b1vals=dists.map(d=>+(calcB(51.13,d/100)*1e6).toFixed(2));
-  const b2vals=dists.map(d=>+(calcB(40.90,d/100)*1e6).toFixed(2));
-  chartBObj=new Chart(document.getElementById('chartB'),{
-    type:'line',
-    data:{
-      labels:dists.map(d=>d+' cm'),
-      datasets:[
-        {label:'B Sistema 1 — 51.13 A (μT)',data:b1vals,borderColor:'#1e5fa8',backgroundColor:'rgba(30,95,168,.1)',fill:true,tension:.4,pointRadius:3},
-        {label:'B Sistema 2 — 40.90 A (μT)',data:b2vals,borderColor:'#2d8653',backgroundColor:'rgba(45,134,83,.08)',fill:true,tension:.4,pointRadius:3},
-        {label:'Límite OMS 200 μT',data:dists.map(()=>200),borderColor:'#ef4444',borderDash:[6,4],pointRadius:0,backgroundColor:'transparent'}
-      ]
-    },
-    options:{responsive:true,plugins:{legend:{position:'top'}},scales:{y:{type:'logarithmic',ticks:{callback:v=>v+' μT'}}}}
-  });
-  updateB();
-}
-
-// Inicializar
-window.onload=()=>{
-  calcular();
-  buildChartLocales();
-};
-</script>
+  <script src="assets/vendor/chartjs/chart.umd.js"></script>
+  <script src="assets/js/data/project.js"></script>
+  <script src="assets/js/core/solar.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/pages/simulator.js"></script>
 </body>
-
 </html>
